@@ -1,5 +1,6 @@
 ---
 import DataBankLayout from '../../layouts/DataBankLayout.astro';
+import StarRow from '../../components/StarRow.astro';
 import { getCollection } from 'astro:content';
 import { sitePath } from '../../lib/sitePath';
 import { PATHS } from '../../lib/paths';
@@ -20,7 +21,7 @@ const entries = allEntries
 
 const indexed = entries.filter((e) => !e.data.draft);
 const locked = entries.filter((e) => e.data.draft);
-const totalSlots = Math.max(entries.length + 8, 28);
+const totalSlots = Math.max(indexed.length + 6, 24);
 
 type CardData = {
   slug: string;
@@ -35,44 +36,30 @@ type CardData = {
   href: string | null;
 };
 
+async function buildCard(entry: { id: string; data: { title: string; path?: string; role?: string; rarity?: string | number; draft?: boolean } }, locked: boolean): Promise<CardData> {
+  const game = resolveCharacter(gameIndex, entry.id, entry.data.title);
+  const path = entry.data.path ?? '';
+  const element = entry.data.role ?? game?.element ?? '';
+  return {
+    slug: entry.id,
+    title: entry.data.title,
+    path,
+    element,
+    rarity: Number(entry.data.rarity) || game?.rarity || 4,
+    portrait: game ? portraitUrl(game) : null,
+    pathIcon: path ? await pathIconUrl(path) : null,
+    elementIcon: element ? await elementIconUrl(element) : null,
+    locked,
+    href: locked ? null : sitePath(`/characters/${entry.id}/`),
+  };
+}
+
 const cards: CardData[] = [
-  ...indexed.map((entry) => {
-    const game = resolveCharacter(gameIndex, entry.id, entry.data.title);
-    const path = entry.data.path ?? '';
-    const element = entry.data.role ?? game?.element ?? '';
-    return {
-      slug: entry.id,
-      title: entry.data.title,
-      path,
-      element,
-      rarity: Number(entry.data.rarity) || game?.rarity || 4,
-      portrait: game ? portraitUrl(game) : null,
-      pathIcon: path ? pathIconUrl(path) : null,
-      elementIcon: element ? elementIconUrl(element) : null,
-      locked: false,
-      href: sitePath(`/characters/${entry.id}/`),
-    };
-  }),
-  ...locked.map((entry) => {
-    const game = resolveCharacter(gameIndex, entry.id, entry.data.title);
-    const path = entry.data.path ?? '';
-    const element = entry.data.role ?? game?.element ?? '';
-    return {
-      slug: entry.id,
-      title: entry.data.title,
-      path,
-      element,
-      rarity: Number(entry.data.rarity) || game?.rarity || 4,
-      portrait: game ? portraitUrl(game) : null,
-      pathIcon: path ? pathIconUrl(path) : null,
-      elementIcon: element ? elementIconUrl(element) : null,
-      locked: true,
-      href: null,
-    };
-  }),
+  ...(await Promise.all(indexed.map((e) => buildCard(e, false)))),
+  ...(await Promise.all(locked.map((e) => buildCard(e, true)))),
 ];
 
-const placeholderCount = Math.max(0, totalSlots - cards.length);
+const placeholderCount = Math.max(0, Math.min(6, totalSlots - cards.length));
 for (let i = 0; i < placeholderCount; i++) {
   cards.push({
     slug: `locked-${i}`,
@@ -90,6 +77,22 @@ for (let i = 0; i < placeholderCount; i++) {
 
 const pathsInUse = new Set(cards.filter((c) => c.path).map((c) => c.path));
 const filterPaths = PATHS.filter((p) => p.id === 'all' || pathsInUse.has(p.id));
+
+const pathIcons: Record<string, string> = {};
+for (const p of filterPaths) {
+  if (p.id !== 'all') pathIcons[p.id] = await pathIconUrl(p.label);
+}
+
+const pathLocal: Record<string, string> = {
+  Destruction: sitePath('assets/icon/path/Destruction.png'),
+  'The Hunt': sitePath('assets/icon/path/Hunt.png'),
+  Erudition: sitePath('assets/icon/path/Erudition.png'),
+  Harmony: sitePath('assets/icon/path/Harmony.png'),
+  Nihility: sitePath('assets/icon/path/Nihility.png'),
+  Preservation: sitePath('assets/icon/path/Preservation.png'),
+  Abundance: sitePath('assets/icon/path/Abundance.png'),
+  Remembrance: sitePath('assets/icon/path/Remembrance.png'),
+};
 ---
 
 <DataBankLayout
@@ -100,105 +103,123 @@ const filterPaths = PATHS.filter((p) => p.id === 'all' || pathsInUse.has(p.id));
   backHref={sitePath('/')}
   indexed={{ current: indexed.length, total: totalSlots }}
 >
-  <div class="catalog-shell">
-    <aside class="path-rail" aria-label="Filter by Path">
-      {
-        filterPaths.map((p, i) => (
-          <button
-            type="button"
-            class:list={['path-filter', { 'is-active': i === 0 }]}
-            data-path={p.id}
-          >
-            <span class="path-filter-icon">
-              {
-                p.id === 'all' ? (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M8 12h8M12 8v8" />
-                  </svg>
-                ) : (
-                  <img src={pathIconUrl(p.label)} alt="" width="22" height="22" loading="lazy" />
-                )
-              }
-            </span>
-            <span class="path-filter-label">{p.label}</span>
-          </button>
-        ))
-      }
-    </aside>
-
-    <div class="char-grid-wrap">
-      <ul class="char-grid" id="char-grid">
+  <div class="catalog-panel">
+    <div class="catalog-shell">
+      <aside class="path-rail" aria-label="Filter by Path">
         {
-          cards.map((card) => (
-            <li
-              class:list={['char-card', { 'is-locked': card.locked, 'is-mystery': card.title === '???' }]}
-              data-path={card.path || 'none'}
+          filterPaths.map((p, i) => (
+            <button
+              type="button"
+              class:list={['path-filter', { 'is-active': i === 0 }]}
+              data-path={p.id}
             >
-              {
-                card.href && !card.locked ? (
-                  <a href={card.href} class="char-card-link">
-                    <div class="char-portrait">
-                      {
-                        card.portrait ? (
-                          <img src={card.portrait} alt="" loading="lazy" />
-                        ) : (
-                          <div class="char-portrait-fallback" />
-                        )
-                      }
-                      <div class="char-badges">
-                        {card.elementIcon && (
-                          <img src={card.elementIcon} alt="" class="badge-element" width="20" height="20" />
-                        )}
-                        {card.pathIcon && (
-                          <img src={card.pathIcon} alt="" class="badge-path" width="20" height="20" />
-                        )}
-                      </div>
-                    </div>
-                    <div class="char-footer">
-                      <span class="char-name">{card.title}</span>
-                      <span class="char-stars" aria-label={`${card.rarity} stars`}>
-                        {Array.from({ length: card.rarity }).map(() => '★')}
-                      </span>
-                    </div>
-                  </a>
-                ) : (
-                  <div class="char-card-link">
-                    <div class="char-portrait">
-                      {
-                        card.portrait && card.title !== '???' ? (
-                          <img src={card.portrait} alt="" loading="lazy" />
-                        ) : (
-                          <div class="char-portrait-fallback" />
-                        )
-                      }
-                      <div class="char-locked-banner">Not Indexed</div>
-                      {card.title !== '???' && (
-                        <div class="char-badges">
-                          {card.elementIcon && (
-                            <img src={card.elementIcon} alt="" class="badge-element" width="20" height="20" />
-                          )}
-                          {card.pathIcon && (
-                            <img src={card.pathIcon} alt="" class="badge-path" width="20" height="20" />
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <div class="char-footer">
-                      <span class="char-name">{card.title}</span>
-                      {card.rarity > 0 && (
-                        <span class="char-stars" aria-hidden="true">
-                          {Array.from({ length: card.rarity }).map(() => '★')}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )
-              }
-            </li>
+              <span class="path-filter-icon">
+                {
+                  p.id === 'all' ? (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                      <circle cx="12" cy="12" r="8.5" />
+                      <path d="M8 12h8M12 8v8" stroke-linecap="round" />
+                    </svg>
+                  ) : (
+                    <img
+                      src={pathLocal[p.label] ?? pathIcons[p.id]}
+                      alt=""
+                      width="24"
+                      height="24"
+                      loading="eager"
+                    />
+                  )
+                }
+              </span>
+              <span class="path-filter-label">{p.label}</span>
+            </button>
           ))
         }
-      </ul>
+      </aside>
+
+      <div class="char-grid-wrap">
+        <ul class="char-grid" id="char-grid">
+          {
+            cards.map((card) => (
+              <li
+                class:list={['char-card', { 'is-locked': card.locked, 'is-mystery': card.title === '???' }]}
+                data-path={card.path || 'none'}
+              >
+                {
+                  card.href ? (
+                    <a href={card.href} class="char-card-link">
+                      <div class="char-portrait">
+                        {
+                          card.portrait ? (
+                            <img
+                              src={card.portrait}
+                              alt=""
+                              loading="lazy"
+                              decoding="async"
+                              onerror="this.hidden=true;this.nextElementSibling?.classList.add('is-visible')"
+                            />
+                          ) : null
+                        }
+                        <div class:list={['char-portrait-fallback', { 'is-visible': !card.portrait }]} />
+                        <div class="char-badges">
+                          {card.elementIcon && (
+                            <span class="badge-wrap badge-element-wrap">
+                              <img src={card.elementIcon} alt="" class="badge-element" width="18" height="18" />
+                            </span>
+                          )}
+                          {card.pathIcon && (
+                            <span class="badge-wrap badge-path-wrap">
+                              <img src={card.pathIcon} alt="" class="badge-path" width="18" height="18" />
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div class="char-footer">
+                        <span class="char-name">{card.title}</span>
+                        <StarRow count={card.rarity} />
+                      </div>
+                    </a>
+                  ) : (
+                    <div class="char-card-link">
+                      <div class="char-portrait">
+                        {
+                          card.portrait && card.title !== '???' ? (
+                            <img
+                              src={card.portrait}
+                              alt=""
+                              loading="lazy"
+                              class="is-dimmed"
+                            />
+                          ) : (
+                            <div class="char-portrait-fallback is-visible" />
+                          )
+                        }
+                        <div class="char-locked-banner">Not Indexed</div>
+                        {card.title !== '???' && card.pathIcon && (
+                          <div class="char-badges">
+                            {card.elementIcon && (
+                              <span class="badge-wrap">
+                                <img src={card.elementIcon} alt="" width="18" height="18" />
+                              </span>
+                            )}
+                            <span class="badge-wrap">
+                              <img src={card.pathIcon} alt="" width="18" height="18" />
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div class="char-footer">
+                        <span class="char-name">{card.title}</span>
+                        {card.rarity > 0 && <StarRow count={card.rarity} />}
+                      </div>
+                    </div>
+                  )
+                }
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
   </div>
 </DataBankLayout>

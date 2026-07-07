@@ -11,7 +11,8 @@
     "import:game:all": "node scripts/import-game-data.mjs --type characters && node scripts/import-game-data.mjs --type lightcones && node scripts/import-game-data.mjs --type relics",
     "import:game:local": "node scripts/import-game-data.mjs --local --type characters",
     "import:game:publish": "node scripts/import-game-data.mjs --type characters --publish",
-    "seed:lore": "node scripts/seed-databank-lore.mjs"
+    "seed:lore": "node scripts/seed-databank-lore.mjs",
+    "fetch:assets": "node scripts/fetch-ui-assets.mjs"
   },
   "dependencies": {
     "astro": "^5.7.0"

@@ -1,0 +1,15 @@
+---
+interface Props {
+  count: number;
+}
+
+const { count } = Astro.props;
+---
+
+<span class="star-row" aria-hidden="true">
+  {Array.from({ length: count }).map(() => (
+    <svg class="star-icon" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M8 1.2l1.76 3.57 3.94.57-2.85 2.78.67 3.92L8 10.9l-3.52 1.85.67-3.92-2.85-2.78 3.94-.57L8 1.2z" />
+    </svg>
+  ))}
+</span>

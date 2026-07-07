@@ -36,7 +36,7 @@ const showChrome = variant !== 'hub';
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <title>{pageTitle}</title>
@@ -44,20 +44,23 @@ const showChrome = variant !== 'hub';
   <body class:list={[`variant-${variant}`]}>
     <div class="starfield" aria-hidden="true"></div>
     <div class="nebula" aria-hidden="true"></div>
+    <div class="light-streak" aria-hidden="true"></div>
 
     {
       variant === 'hub' ? (
         <div class="db-viewport">
           <header class="db-hub-header">
             <a href={sitePath('/')} class="db-brand" aria-label="Data Bank home">
-              <span class="db-brand-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4" />
-                </svg>
-              </span>
+              <img
+                src={sitePath('assets/icon/sign/DataBankIcon.png')}
+                alt=""
+                class="db-brand-img"
+                width="28"
+                height="28"
+              />
               <span class="db-brand-text">Data Bank</span>
             </a>
+            <span class="db-hub-spacer" />
           </header>
           <slot />
           <footer class="db-uid">UID · Archive</footer>
@@ -66,6 +69,13 @@ const showChrome = variant !== 'hub';
         <div class="db-viewport">
           <header class="db-chrome">
             <div class="db-chrome-left">
+              <img
+                src={sitePath('assets/icon/sign/DataBankIcon.png')}
+                alt=""
+                class="db-chrome-logo"
+                width="22"
+                height="22"
+              />
               <a href={backHref ?? sitePath('/')} class="db-back" aria-label="Back">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M15 6l-6 6 6 6" />

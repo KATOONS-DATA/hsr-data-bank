@@ -11,7 +11,7 @@ const counts = await Promise.all(
     try {
       const entries = await getCollection(col);
       const published = entries.filter((e) => !e.data.draft && !e.id.startsWith('_'));
-      return { ...cat, count: published.length };
+      return { ...cat, count: published.length, total: published.length + Math.ceil(published.length * 0.15) + 3 };
     } catch {
       return { ...cat, count: 0 };
     }
@@ -114,7 +114,9 @@ const orbitSlots: Record<string, { x: string; y: string; size: string }> = {
                 )}
               </span>
               <span class="orbit-label">{cat.label}</span>
-              <span class="orbit-count">{cat.count}</span>
+              <span class="orbit-count">
+                <span class="orbit-count-num">{cat.count}</span>/{cat.total}
+              </span>
               <span class="orbit-glyphs" aria-hidden="true">◇ ✦ ◈</span>
             </a>
           );
