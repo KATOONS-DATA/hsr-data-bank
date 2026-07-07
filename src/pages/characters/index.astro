@@ -1,9 +1,221 @@
 ---
-import CategoryIndex from '../../components/CategoryIndex.astro';
+import DataBankLayout from '../../layouts/DataBankLayout.astro';
+import { getCollection } from 'astro:content';
+import { sitePath } from '../../lib/sitePath';
+import { PATHS } from '../../lib/paths';
+import {
+  loadCharacterIndex,
+  resolveCharacter,
+  portraitUrl,
+  pathIconUrl,
+  elementIconUrl,
+} from '../../lib/gameAssets';
+
+const allEntries = await getCollection('characters');
+const gameIndex = await loadCharacterIndex();
+
+const entries = allEntries
+  .filter((e) => !e.id.startsWith('_'))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const indexed = entries.filter((e) => !e.data.draft);
+const locked = entries.filter((e) => e.data.draft);
+const totalSlots = Math.max(entries.length + 8, 28);
+
+type CardData = {
+  slug: string;
+  title: string;
+  path: string;
+  element: string;
+  rarity: number;
+  portrait: string | null;
+  pathIcon: string | null;
+  elementIcon: string | null;
+  locked: boolean;
+  href: string | null;
+};
+
+const cards: CardData[] = [
+  ...indexed.map((entry) => {
+    const game = resolveCharacter(gameIndex, entry.id, entry.data.title);
+    const path = entry.data.path ?? '';
+    const element = entry.data.role ?? game?.element ?? '';
+    return {
+      slug: entry.id,
+      title: entry.data.title,
+      path,
+      element,
+      rarity: Number(entry.data.rarity) || game?.rarity || 4,
+      portrait: game ? portraitUrl(game) : null,
+      pathIcon: path ? pathIconUrl(path) : null,
+      elementIcon: element ? elementIconUrl(element) : null,
+      locked: false,
+      href: sitePath(`/characters/${entry.id}/`),
+    };
+  }),
+  ...locked.map((entry) => {
+    const game = resolveCharacter(gameIndex, entry.id, entry.data.title);
+    const path = entry.data.path ?? '';
+    const element = entry.data.role ?? game?.element ?? '';
+    return {
+      slug: entry.id,
+      title: entry.data.title,
+      path,
+      element,
+      rarity: Number(entry.data.rarity) || game?.rarity || 4,
+      portrait: game ? portraitUrl(game) : null,
+      pathIcon: path ? pathIconUrl(path) : null,
+      elementIcon: element ? elementIconUrl(element) : null,
+      locked: true,
+      href: null,
+    };
+  }),
+];
+
+const placeholderCount = Math.max(0, totalSlots - cards.length);
+for (let i = 0; i < placeholderCount; i++) {
+  cards.push({
+    slug: `locked-${i}`,
+    title: '???',
+    path: '',
+    element: '',
+    rarity: 0,
+    portrait: null,
+    pathIcon: null,
+    elementIcon: null,
+    locked: true,
+    href: null,
+  });
+}
+
+const pathsInUse = new Set(cards.filter((c) => c.path).map((c) => c.path));
+const filterPaths = PATHS.filter((p) => p.id === 'all' || pathsInUse.has(p.id));
 ---
 
-<CategoryIndex
-  collection="characters"
+<DataBankLayout
   title="Characters"
-  subtitle="Individuals recorded in the archive."
-/>
+  description="Individuals recorded in the archive."
+  variant="catalog"
+  category="Characters"
+  backHref={sitePath('/')}
+  indexed={{ current: indexed.length, total: totalSlots }}
+>
+  <div class="catalog-shell">
+    <aside class="path-rail" aria-label="Filter by Path">
+      {
+        filterPaths.map((p, i) => (
+          <button
+            type="button"
+            class:list={['path-filter', { 'is-active': i === 0 }]}
+            data-path={p.id}
+          >
+            <span class="path-filter-icon">
+              {
+                p.id === 'all' ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M8 12h8M12 8v8" />
+                  </svg>
+                ) : (
+                  <img src={pathIconUrl(p.label)} alt="" width="22" height="22" loading="lazy" />
+                )
+              }
+            </span>
+            <span class="path-filter-label">{p.label}</span>
+          </button>
+        ))
+      }
+    </aside>
+
+    <div class="char-grid-wrap">
+      <ul class="char-grid" id="char-grid">
+        {
+          cards.map((card) => (
+            <li
+              class:list={['char-card', { 'is-locked': card.locked, 'is-mystery': card.title === '???' }]}
+              data-path={card.path || 'none'}
+            >
+              {
+                card.href && !card.locked ? (
+                  <a href={card.href} class="char-card-link">
+                    <div class="char-portrait">
+                      {
+                        card.portrait ? (
+                          <img src={card.portrait} alt="" loading="lazy" />
+                        ) : (
+                          <div class="char-portrait-fallback" />
+                        )
+                      }
+                      <div class="char-badges">
+                        {card.elementIcon && (
+                          <img src={card.elementIcon} alt="" class="badge-element" width="20" height="20" />
+                        )}
+                        {card.pathIcon && (
+                          <img src={card.pathIcon} alt="" class="badge-path" width="20" height="20" />
+                        )}
+                      </div>
+                    </div>
+                    <div class="char-footer">
+                      <span class="char-name">{card.title}</span>
+                      <span class="char-stars" aria-label={`${card.rarity} stars`}>
+                        {Array.from({ length: card.rarity }).map(() => '★')}
+                      </span>
+                    </div>
+                  </a>
+                ) : (
+                  <div class="char-card-link">
+                    <div class="char-portrait">
+                      {
+                        card.portrait && card.title !== '???' ? (
+                          <img src={card.portrait} alt="" loading="lazy" />
+                        ) : (
+                          <div class="char-portrait-fallback" />
+                        )
+                      }
+                      <div class="char-locked-banner">Not Indexed</div>
+                      {card.title !== '???' && (
+                        <div class="char-badges">
+                          {card.elementIcon && (
+                            <img src={card.elementIcon} alt="" class="badge-element" width="20" height="20" />
+                          )}
+                          {card.pathIcon && (
+                            <img src={card.pathIcon} alt="" class="badge-path" width="20" height="20" />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <div class="char-footer">
+                      <span class="char-name">{card.title}</span>
+                      {card.rarity > 0 && (
+                        <span class="char-stars" aria-hidden="true">
+                          {Array.from({ length: card.rarity }).map(() => '★')}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )
+              }
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</DataBankLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.path-filter');
+  const cards = document.querySelectorAll<HTMLLIElement>('.char-card');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const path = btn.dataset.path ?? 'all';
+      buttons.forEach((b) => b.classList.toggle('is-active', b === btn));
+      cards.forEach((card) => {
+        const cardPath = card.dataset.path ?? '';
+        const show = path === 'all' || cardPath === path;
+        card.classList.toggle('is-hidden', !show);
+      });
+    });
+  });
+</script>

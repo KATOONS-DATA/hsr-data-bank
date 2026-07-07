@@ -1,14 +1,12 @@
 ---
 title: Stellaron
-description: A seed of disaster that warps worlds and civilizations.
+description: Seed of disaster that warps worlds — heart of the Cancer of All Worlds.
 category: Concepts
 draft: false
 ---
 
 ## Overview
 
-Mysterious objects that catalyze catastrophe. The Stellaron Hunters pursue them; many worlds have suffered their wake.
+Stellarons spread like cancer along star routes, corrupting worlds with Fragmentum. Most civilizations know them only as destruction; Stellaron Hunters pursue them for unknown ends. Often appears alongside Nanook's Legion — connection unproven.
 
 ## At the table
-
-What the party understands about Stellarons so far.

@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('factions');
+  const entries = await getCollection('aeons');
   return entries.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
@@ -15,17 +15,14 @@ const { Content } = await render(entry);
 const d = entry.data;
 
 const infoboxRows = [
-  { label: 'Path', value: d.associatedPath },
-  { label: 'Alignment', value: d.alignment },
-  { label: 'World', value: d.world },
-  { label: 'Status', value: d.status },
+  { label: 'Path', value: d.path },
 ];
 ---
 
 <ArticleLayout
   title={d.title}
   description={d.description}
-  collection="factions"
+  collection="aeons"
   infoboxRows={infoboxRows}
 >
   <Content />

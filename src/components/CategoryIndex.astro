@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import DataBankLayout from '../layouts/DataBankLayout.astro';
 import { getCollection } from 'astro:content';
 import type { WikiCollection } from '../content.config';
 import { sitePath } from '../lib/sitePath';
@@ -13,59 +13,64 @@ interface Props {
 const { collection, title, subtitle } = Astro.props;
 
 const entries = (await getCollection(collection))
-  .filter((entry) => !entry.data.draft)
+  .filter((entry) => !entry.data.draft && !entry.id.startsWith('_'))
   .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const collectionLabels: Record<WikiCollection, string> = {
+  characters: 'Characters',
+  factions: 'Factions',
+  aeons: 'Aeons',
+  locations: 'Locations',
+  terminology: 'Terminology',
+  lightcones: 'Light Cones',
+  relics: 'Relics',
+};
 ---
 
-<BaseLayout title={title} description={subtitle} activeNav={collection}>
-  <div class="content-frame">
-    <header class="page-header">
-      <h1>{title}</h1>
-      <p class="subtitle">{subtitle}</p>
-    </header>
-
-    <div class="panel panel-hsr">
-      <div class="panel-inner">
-        <div class="catalog-meta">
-          <span>Archive index</span>
-          <span class="catalog-count">{entries.length} entries</span>
-        </div>
-        <ul class="entry-catalog">
-          {
-            entries.length === 0 ? (
-              <li>
-                <span class="entry-locked">
-                  No entries yet — add a .md file in src/content/{collection}/
-                </span>
-              </li>
-            ) : (
-              entries.map((entry) => (
-                <li>
-                  <a href={sitePath(`/${collection}/${entry.id}/`)}>
-                    <span class="entry-title">{entry.data.title}</span>
-                    {entry.data.description && (
-                      <span class="entry-desc">{entry.data.description}</span>
-                    )}
-                    {'path' in entry.data && entry.data.path && (
-                      <span class="entry-meta">
-                        <span class="entry-tag">{entry.data.path}</span>
-                      </span>
-                    )}
-                    {'faction' in entry.data && entry.data.faction && !entry.data.path && (
-                      <span class="entry-meta">
-                        <span class="entry-tag">{entry.data.faction}</span>
-                      </span>
-                    )}
-                  </a>
-                </li>
-              ))
-            )
-          }
+<DataBankLayout
+  title={title}
+  description={subtitle}
+  variant="catalog"
+  category={collectionLabels[collection]}
+  backHref={sitePath('/')}
+  indexed={{ current: entries.length, total: entries.length + 3 }}
+>
+  <div class="list-panel">
+    <p class="list-intro">{subtitle}</p>
+    <ul class="entry-list">
+      {
+        entries.length === 0 ? (
           <li>
-            <span class="entry-locked">??? — Data not yet available</span>
+            <span class="entry-locked">
+              No entries yet — add a .md file in src/content/{collection}/
+            </span>
           </li>
-        </ul>
-      </div>
-    </div>
+        ) : (
+          entries.map((entry) => (
+            <li>
+              <a href={sitePath(`/${collection}/${entry.id}/`)}>
+                <span class="entry-title">{entry.data.title}</span>
+                {entry.data.description && (
+                  <span class="entry-desc">{entry.data.description}</span>
+                )}
+                {'path' in entry.data && entry.data.path && (
+                  <span class="entry-meta">
+                    <span class="entry-tag">{entry.data.path}</span>
+                  </span>
+                )}
+                {'faction' in entry.data && entry.data.faction && !entry.data.path && (
+                  <span class="entry-meta">
+                    <span class="entry-tag">{entry.data.faction}</span>
+                  </span>
+                )}
+              </a>
+            </li>
+          ))
+        )
+      }
+      <li>
+        <span class="entry-locked">??? — Data not yet available</span>
+      </li>
+    </ul>
   </div>
-</BaseLayout>
+</DataBankLayout>

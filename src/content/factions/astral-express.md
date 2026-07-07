@@ -1,23 +1,28 @@
 ---
 title: Astral Express
-description: A train that travels the star rail between worlds — the party's home base.
+description: The train that rides the star rail — inherited from Akivili the Trailblaze.
+associatedPath: Trailblaze
 alignment: Allied
-world: —
 status: Active
 draft: false
 ---
 
 ## Overview
 
-The Trailblazers' locomotive and crew chart paths between worlds. The Express is both transport and headquarters for those who walk the Path of Trailblaze.
+After Akivili fell, the Trailblazing will lived on in the Nameless — and in the Express the Aeon once rode. Star rails corrupted by the Cancer of All Worlds forced the train to limp between obstructed routes for years, until a red-haired engineer restored it and set it traveling again.
+
+The Express stops at stations across the cosmos. Passengers board and leave; agendas differ, but the voyage is shared. Himeko and the crew open the doors to anyone willing to ride.
+
+> *"Choo! Choo! Sit tight, no one fight, warp jump watch your head."*
+> — Astral Express Safety Instructions (Pom-Pom version)
 
 ## Known crew
 
-- [Himeko](../../characters/himeko/)
-- [Welt](../../characters/welt/)
-- [Dan Heng](../../characters/dan-heng/)
-- [March 7th](../../characters/march-7th/)
-- [Trailblazer](../../characters/trailblazer/)
+- [Himeko](../characters/himeko/)
+- [Welt](../characters/welt/)
+- [Dan Heng](../characters/dan-heng/)
+- [March 7th](../characters/march-7th/)
+- [Trailblazer](../characters/trailblazer/)
 
 ## At the table
 

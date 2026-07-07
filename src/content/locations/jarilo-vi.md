@@ -1,7 +1,7 @@
 ---
 title: Jarilo-VI
-description: A frozen world locked in eternal winter.
-region: —
+description: Frozen world — Belobog above, Underworld below.
+region: Outer Rim
 world: Jarilo-VI
 status: Known
 draft: false
@@ -9,8 +9,6 @@ draft: false
 
 ## Overview
 
-A planet encased in ice, divided between the overworld and the Underworld beneath Belobog.
+Ancient wars ended when an early spring turned the tide; the planet was named for the war god Jarilo. Intensive development exhausted resources; Stellaron and Eternal Freeze ended its golden age. Survivors built Belobog and lost contact with the wider cosmos.
 
 ## At the table
-
-Record what your campaign has established about Jarilo-VI.

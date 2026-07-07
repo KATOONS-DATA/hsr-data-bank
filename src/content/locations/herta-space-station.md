@@ -1,16 +1,14 @@
 ---
 title: Herta Space Station
-description: A research station orbiting a dormant aeon.
-region: Space
-world: —
-status: Visited
+description: Orbital museum-lab sealing strange existences among the stars.
+region: Orbit
+world: Various
+status: Known
 draft: false
 ---
 
 ## Overview
 
-A space station run by Herta and staffed by researchers. The Trailblazers' journey often intersects with its experiments and crises.
+Genius Society member Herta established a museum-like starship to collect and seal curios from across the cosmos. Researchers catalog relics and curios; the collection draws jealous eyes, but Herta's power keeps crises rare.
 
 ## At the table
-
-What your party experienced here — not necessarily everything from the game.

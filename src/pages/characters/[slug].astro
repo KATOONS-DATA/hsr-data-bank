@@ -1,6 +1,11 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import {
+  loadCharacterIndex,
+  resolveCharacter,
+  portraitUrl,
+} from '../../lib/gameAssets';
 
 export async function getStaticPaths() {
   const entries = await getCollection('characters');
@@ -14,13 +19,17 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
 
+const gameIndex = await loadCharacterIndex();
+const gameChar = resolveCharacter(gameIndex, entry.id, d.title);
+const portrait = gameChar ? portraitUrl(gameChar) : undefined;
+
 const infoboxRows = [
   { label: 'Faction', value: d.faction },
   { label: 'Path', value: d.path },
-  { label: 'Rarity', value: d.rarity != null ? String(d.rarity) : undefined },
+  { label: 'Element', value: d.role },
+  { label: 'Rarity', value: d.rarity != null ? `${d.rarity}★` : undefined },
   { label: 'World', value: d.world },
   { label: 'Status', value: d.status },
-  { label: 'Role', value: d.role },
 ];
 ---
 
@@ -29,6 +38,7 @@ const infoboxRows = [
   description={d.description}
   collection="characters"
   infoboxRows={infoboxRows}
+  portraitUrl={portrait}
 >
   <Content />
 </ArticleLayout>

@@ -7,15 +7,21 @@ interface Row {
 interface Props {
   title: string;
   rows: Row[];
+  imageUrl?: string;
 }
 
-const { title, rows } = Astro.props;
+const { title, rows, imageUrl } = Astro.props;
 const visibleRows = rows.filter((row) => row.value && row.value.trim() !== '');
 ---
 
 {
   visibleRows.length > 0 && (
     <aside class="infobox">
+      {imageUrl && (
+        <div class="infobox-portrait">
+          <img src={imageUrl} alt="" loading="lazy" />
+        </div>
+      )}
       <div class="infobox-header">{title}</div>
       <table>
         <tbody>

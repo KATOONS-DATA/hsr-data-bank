@@ -27,6 +27,18 @@ const factions = defineCollection({
   schema: z.object({
     ...entryFields,
     alignment: z.string().optional(),
+    /** Associated Path — matches in-game Data Bank tags */
+    associatedPath: z.string().optional(),
+  }),
+});
+
+const aeons = defineCollection({
+  loader: glob({ base: './src/content/aeons', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    path: z.string().optional(),
+    draft: z.boolean().optional(),
   }),
 });
 
@@ -74,6 +86,7 @@ const relics = defineCollection({
 export const collections = {
   characters,
   factions,
+  aeons,
   locations,
   terminology,
   lightcones,
@@ -96,6 +109,13 @@ export const categories = [
     href: '/factions/',
     icon: '✦',
     blurb: 'Organizations, allegiances, and power structures.',
+  },
+  {
+    id: 'aeons' as const,
+    label: 'Aeons',
+    href: '/aeons/',
+    icon: '☆',
+    blurb: 'Divine beings who tread the Paths between the stars.',
   },
   {
     id: 'locations' as const,

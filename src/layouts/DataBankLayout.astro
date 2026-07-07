@@ -1,0 +1,102 @@
+---
+import '../styles/databank.css';
+import { site } from '../../site.config';
+import { sitePath } from '../lib/sitePath';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** hub = orbital home, catalog = list view, article = entry detail */
+  variant?: 'hub' | 'catalog' | 'article';
+  category?: string;
+  backHref?: string;
+  indexed?: { current: number; total: number };
+}
+
+const {
+  title,
+  description,
+  variant = 'catalog',
+  category,
+  backHref,
+  indexed,
+} = Astro.props;
+
+const pageTitle = title === site.title ? title : `${title} — ${site.title}`;
+const showChrome = variant !== 'hub';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description ?? site.tagline} />
+    <link rel="icon" type="image/svg+xml" href={sitePath('favicon.svg')} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{pageTitle}</title>
+  </head>
+  <body class:list={[`variant-${variant}`]}>
+    <div class="starfield" aria-hidden="true"></div>
+    <div class="nebula" aria-hidden="true"></div>
+
+    {
+      variant === 'hub' ? (
+        <div class="db-viewport">
+          <header class="db-hub-header">
+            <a href={sitePath('/')} class="db-brand" aria-label="Data Bank home">
+              <span class="db-brand-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4" />
+                </svg>
+              </span>
+              <span class="db-brand-text">Data Bank</span>
+            </a>
+          </header>
+          <slot />
+          <footer class="db-uid">UID · Archive</footer>
+        </div>
+      ) : (
+        <div class="db-viewport">
+          <header class="db-chrome">
+            <div class="db-chrome-left">
+              <a href={backHref ?? sitePath('/')} class="db-back" aria-label="Back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M15 6l-6 6 6 6" />
+                </svg>
+              </a>
+              <div class="db-chrome-titles">
+                <span class="db-chrome-parent">Data Bank</span>
+                <h1 class="db-chrome-title">{category ?? title}</h1>
+              </div>
+            </div>
+            <div class="db-chrome-right">
+              {
+                indexed && (
+                  <div class="db-indexed">
+                    Indexed <strong>{indexed.current}</strong>/{indexed.total}
+                  </div>
+                )
+              }
+              <a href={sitePath('/')} class="db-close" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </a>
+            </div>
+          </header>
+          <main class="db-main">
+            <slot />
+          </main>
+          <footer class="db-uid">UID · Archive</footer>
+        </div>
+      )
+    }
+  </body>
+</html>

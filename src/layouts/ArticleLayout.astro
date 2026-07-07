@@ -1,5 +1,5 @@
 ---
-import BaseLayout from './BaseLayout.astro';
+import DataBankLayout from './DataBankLayout.astro';
 import Infobox from '../components/Infobox.astro';
 import type { WikiCollection } from '../content.config';
 import { sitePath } from '../lib/sitePath';
@@ -14,13 +14,15 @@ interface Props {
   description?: string;
   collection: WikiCollection;
   infoboxRows?: InfoboxRow[];
+  portraitUrl?: string;
 }
 
-const { title, description, collection, infoboxRows = [] } = Astro.props;
+const { title, description, collection, infoboxRows = [], portraitUrl } = Astro.props;
 
 const collectionLabels: Record<WikiCollection, string> = {
   characters: 'Characters',
   factions: 'Factions',
+  aeons: 'Aeons',
   locations: 'Locations',
   terminology: 'Terminology',
   lightcones: 'Light Cones',
@@ -28,13 +30,15 @@ const collectionLabels: Record<WikiCollection, string> = {
 };
 ---
 
-<BaseLayout
+<DataBankLayout
   title={title}
   description={description}
-  activeNav={collection}
+  variant="article"
+  category={title}
+  backHref={sitePath(`/${collection}/`)}
 >
-  <div class="content-frame">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
+  <article class="entry-panel">
+    <nav class="entry-crumb" aria-label="Breadcrumb">
       <a href={sitePath('/')}>Data Bank</a>
       <span class="sep">›</span>
       <a href={sitePath(`/${collection}/`)}>{collectionLabels[collection]}</a>
@@ -42,14 +46,14 @@ const collectionLabels: Record<WikiCollection, string> = {
       <span>{title}</span>
     </nav>
 
-    <article class="panel panel-hsr article-panel">
+    <div class="entry-body-wrap">
       {infoboxRows.length > 0 && (
-        <Infobox title={title} rows={infoboxRows} />
+        <Infobox title={title} rows={infoboxRows} imageUrl={portraitUrl} />
       )}
       <div class="article-body">
         <h1>{title}</h1>
         <slot />
       </div>
-    </article>
-  </div>
-</BaseLayout>
+    </div>
+  </article>
+</DataBankLayout>

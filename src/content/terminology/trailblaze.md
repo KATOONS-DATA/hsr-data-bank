@@ -1,14 +1,12 @@
 ---
 title: Trailblaze
-description: The path of those who chart unknown routes between worlds.
+description: Path walked by Akivili, the Nameless, and the Astral Express.
 category: Paths
 draft: false
 ---
 
 ## Overview
 
-Trailblazers walk between worlds on the star rail, resolving crises and opening new routes. Your party follows this path.
+Exploration linking worlds via star rail. The Express calendar inherits from Akivili's homeworld Pegana. The Trailblazer and crew continue where the Aeon fell.
 
 ## At the table
-
-How Trailblaze manifests at your table (Fabula Ultima, narrative role, etc.).
