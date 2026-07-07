@@ -1,0 +1,18 @@
+{
+  "name": "hsr-data-bank",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "import:game": "node scripts/import-game-data.mjs --type characters",
+    "import:game:all": "node scripts/import-game-data.mjs --type characters && node scripts/import-game-data.mjs --type lightcones && node scripts/import-game-data.mjs --type relics",
+    "import:game:local": "node scripts/import-game-data.mjs --local --type characters",
+    "import:game:publish": "node scripts/import-game-data.mjs --type characters --publish"
+  },
+  "dependencies": {
+    "astro": "^5.7.0"
+  }
+}

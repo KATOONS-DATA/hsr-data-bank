@@ -1,0 +1,53 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Infobox from '../components/Infobox.astro';
+import type { WikiCollection } from '../content.config';
+import { sitePath } from '../lib/sitePath';
+
+interface InfoboxRow {
+  label: string;
+  value?: string;
+}
+
+interface Props {
+  title: string;
+  description?: string;
+  collection: WikiCollection;
+  infoboxRows?: InfoboxRow[];
+}
+
+const { title, description, collection, infoboxRows = [] } = Astro.props;
+
+const collectionLabels: Record<WikiCollection, string> = {
+  characters: 'Characters',
+  factions: 'Factions',
+  locations: 'Locations',
+  terminology: 'Terminology',
+  lightcones: 'Light Cones',
+  relics: 'Relics',
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  activeNav={collection}
+>
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href={sitePath('/')}>Data Bank</a>
+    <span class="sep">/</span>
+    <a href={sitePath(`/${collection}/`)}>{collectionLabels[collection]}</a>
+    <span class="sep">/</span>
+    <span>{title}</span>
+  </nav>
+
+  <article class="panel article-panel">
+    {infoboxRows.length > 0 && (
+      <Infobox title={title} rows={infoboxRows} />
+    )}
+    <div class="article-body">
+      <h1>{title}</h1>
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

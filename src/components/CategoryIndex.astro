@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import type { WikiCollection } from '../../content.config';
+import { sitePath } from '../lib/sitePath';
+
+interface Props {
+  collection: WikiCollection;
+  title: string;
+  subtitle: string;
+}
+
+const { collection, title, subtitle } = Astro.props;
+
+const entries = (await getCollection(collection))
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+---
+
+<BaseLayout title={title} description={subtitle} activeNav={collection}>
+  <header class="page-header">
+    <h1>{title}</h1>
+    <p class="subtitle">{subtitle}</p>
+  </header>
+
+  <div class="panel">
+    <ul class="entry-list">
+      {
+        entries.length === 0 ? (
+          <li>
+            <span class="entry-locked">No entries yet — add a .md file in src/content/{collection}/</span>
+          </li>
+        ) : (
+          entries.map((entry) => (
+            <li>
+              <a href={sitePath(`/${collection}/${entry.id}/`)}>
+                <span class="entry-title">{entry.data.title}</span>
+                {entry.data.description && (
+                  <span class="entry-desc">{entry.data.description}</span>
+                )}
+              </a>
+            </li>
+          ))
+        )
+      }
+      <li>
+        <span class="entry-locked">??? — Data not yet available</span>
+      </li>
+    </ul>
+  </div>
+</BaseLayout>

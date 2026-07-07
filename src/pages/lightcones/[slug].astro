@@ -1,0 +1,30 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('lightcones');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+
+const infoboxRows = [
+  { label: 'Path', value: d.path },
+  { label: 'Rarity', value: d.rarity != null ? String(d.rarity) : undefined },
+];
+---
+
+<ArticleLayout
+  title={d.title}
+  description={d.description}
+  collection="lightcones"
+  infoboxRows={infoboxRows}
+>
+  <Content />
+</ArticleLayout>
