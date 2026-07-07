@@ -16,6 +16,6 @@
 export const site = {
   title: 'Data Bank',
   tagline: 'Trailblaze Campaign Archive',
-  url: 'https://YOUR-GITHUB-USERNAME.github.io',
+  url: 'https://KATOONS-DATA.github.io',
   base: '/hsr-data-bank',
 } as const;
