@@ -17,8 +17,13 @@ interface Props {
 const { activeNav } = Astro.props;
 
 const navItems = [
-  { id: 'home' as const, label: 'Overview', href: sitePath('/') },
-  ...categories.map((c) => ({ id: c.id, label: c.label, href: sitePath(c.href) })),
+  { id: 'home' as const, label: 'Overview', icon: '◈', href: sitePath('/') },
+  ...categories.map((c) => ({
+    id: c.id,
+    label: c.label,
+    icon: c.icon,
+    href: sitePath(c.href),
+  })),
 ];
 ---
 
@@ -38,11 +43,12 @@ const navItems = [
           href={item.href}
           class:list={['nav-item', { 'is-active': activeNav === item.id }]}
         >
-          {item.label}
+          <span class="nav-icon" aria-hidden="true">{item.icon}</span>
+          <span>{item.label}</span>
         </a>
       ))
     }
   </nav>
 
-  <div class="sidebar-footer">Archive v1.0</div>
+  <div class="sidebar-footer">Archive · Trailblaze</div>
 </aside>

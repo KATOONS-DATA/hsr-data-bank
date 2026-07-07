@@ -33,21 +33,23 @@ const collectionLabels: Record<WikiCollection, string> = {
   description={description}
   activeNav={collection}
 >
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href={sitePath('/')}>Data Bank</a>
-    <span class="sep">/</span>
-    <a href={sitePath(`/${collection}/`)}>{collectionLabels[collection]}</a>
-    <span class="sep">/</span>
-    <span>{title}</span>
-  </nav>
+  <div class="content-frame">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href={sitePath('/')}>Data Bank</a>
+      <span class="sep">›</span>
+      <a href={sitePath(`/${collection}/`)}>{collectionLabels[collection]}</a>
+      <span class="sep">›</span>
+      <span>{title}</span>
+    </nav>
 
-  <article class="panel article-panel">
-    {infoboxRows.length > 0 && (
-      <Infobox title={title} rows={infoboxRows} />
-    )}
-    <div class="article-body">
-      <h1>{title}</h1>
-      <slot />
-    </div>
-  </article>
+    <article class="panel panel-hsr article-panel">
+      {infoboxRows.length > 0 && (
+        <Infobox title={title} rows={infoboxRows} />
+      )}
+      <div class="article-body">
+        <h1>{title}</h1>
+        <slot />
+      </div>
+    </article>
+  </div>
 </BaseLayout>

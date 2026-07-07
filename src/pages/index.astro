@@ -6,20 +6,24 @@ import { sitePath } from '../lib/sitePath';
 ---
 
 <BaseLayout title={site.title} description={site.tagline} activeNav="home">
-  <header class="page-header">
-    <h1>{site.title}</h1>
-    <p class="subtitle">{site.tagline}</p>
-  </header>
+  <div class="content-frame">
+    <header class="page-header">
+      <h1>{site.title}</h1>
+      <p class="subtitle">{site.tagline}</p>
+    </header>
 
-  <section class="card-grid" aria-label="Data Bank categories">
-    {
-      categories.map((cat) => (
-        <a href={sitePath(cat.href)} class="card">
-          <span class="card-icon" aria-hidden="true">{cat.icon}</span>
-          <h2>{cat.label}</h2>
-          <p>{cat.blurb}</p>
-        </a>
-      ))
-    }
-  </section>
+    <section class="card-grid" aria-label="Data Bank categories">
+      {
+        categories.map((cat) => (
+          <a href={sitePath(cat.href)} class="card">
+            <div class="card-icon-wrap">
+              <span class="card-icon" aria-hidden="true">{cat.icon}</span>
+            </div>
+            <h2>{cat.label}</h2>
+            <p>{cat.blurb}</p>
+          </a>
+        ))
+      }
+    </section>
+  </div>
 </BaseLayout>
