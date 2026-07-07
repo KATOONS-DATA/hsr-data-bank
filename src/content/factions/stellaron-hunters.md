@@ -13,10 +13,10 @@ A group operating across the stars. They pursue Stellarons and act according to 
 
 ## Known members
 
-- [Kafka](/hsr-data-bank/characters/kafka/)
-- [Blade](/hsr-data-bank/characters/blade/)
-- [Silver Wolf](/hsr-data-bank/characters/silver-wolf/)
-- [Sparkle](/hsr-data-bank/characters/sparkle/)
+- [Kafka](../../characters/kafka/)
+- [Blade](../../characters/blade/)
+- [Silver Wolf](../../characters/silver-wolf/)
+- [Sparkle](../../characters/sparkle/)
 
 ## At the table
 

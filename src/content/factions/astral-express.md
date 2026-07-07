@@ -13,11 +13,11 @@ The Trailblazers' locomotive and crew chart paths between worlds. The Express is
 
 ## Known crew
 
-- [Himeko](/hsr-data-bank/characters/himeko/)
-- [Welt](/hsr-data-bank/characters/welt/)
-- [Dan Heng](/hsr-data-bank/characters/dan-heng/)
-- [March 7th](/hsr-data-bank/characters/march-7th/)
-- [Trailblazer](/hsr-data-bank/characters/trailblazer/)
+- [Himeko](../../characters/himeko/)
+- [Welt](../../characters/welt/)
+- [Dan Heng](../../characters/dan-heng/)
+- [March 7th](../../characters/march-7th/)
+- [Trailblazer](../../characters/trailblazer/)
 
 ## At the table
 
