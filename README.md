@@ -1,48 +1,152 @@
+````markdown
 # Trailblaze Data Bank
 
-Player-facing campaign wiki styled like Honkai: Star Rail's in-game **Data Bank**. Built with [Astro](https://astro.build/) — free to host on GitHub Pages or Cloudflare Pages.
+A player-facing campaign wiki inspired by **Honkai: Star Rail's Data Bank**.
+
+This project is built with **Astro** and can be hosted for free using **GitHub Pages** or **Cloudflare Pages**.
 
 ---
 
-## Quick start (local preview)
+# Welcome
 
-### 1. Install Node.js (one time)
+Whether you're a player, GM, or developer, this guide will walk you through everything you need to know—from opening the website for the first time to publishing it online.
 
-Download **Node.js 20+** from [nodejs.org](https://nodejs.org/) (LTS). Restart your terminal after installing.
+If you're new, start with **Getting the Website Running** below.
 
-### 2. Install and run
+---
+
+# Getting the Website Running
+
+## 1. Install Node.js (One Time Only)
+
+Download and install **Node.js 20 or newer** from:
+
+https://nodejs.org
+
+After installation, restart your terminal.
+
+---
+
+## 2. Open the Project
+
+Open a terminal inside the project folder.
+
+Example:
 
 ```bash
 cd hsr-data-bank
-npm install
-npm run dev
 ```
-
-Open the URL shown in the terminal (usually `http://localhost:4321`).
-
-### 3. Edit site settings
-
-Open `site.config.ts` and set your title, tagline, and deployment URL.
 
 ---
 
-## Add a new lore entry
+## 3. Install the Project
 
-1. Create a `.md` file in the right folder:
+Run:
 
-| Folder | Example |
-| ------ | ------- |
-| `src/content/characters/` | `himeko.md` |
-| `src/content/factions/` | `wildfire.md` |
-| `src/content/locations/` | `belobog.md` |
-| `src/content/terminology/` | `aeon.md` |
+```bash
+npm install
+```
 
-2. Add frontmatter at the top:
+This only needs to be done the first time (or whenever project dependencies change).
+
+---
+
+## 4. Start the Website
+
+Run:
+
+```bash
+npm run dev
+```
+
+After a few seconds you'll see something similar to:
+
+```text
+Local: http://localhost:4321/
+```
+
+---
+
+## 5. Open the Website
+
+Open your preferred web browser:
+
+- Chrome
+- Firefox
+- Edge
+- Safari
+- etc.
+
+Then visit:
+
+```
+http://localhost:4321
+```
+
+The Trailblaze Data Bank will now be running locally on your computer.
+
+Keep the terminal open while you're using the website.
+
+---
+
+## 6. Making Changes
+
+Edit any Markdown file, page, or stylesheet.
+
+When you save the file, the website automatically refreshes in your browser.
+
+No rebuilding is necessary while developing.
+
+---
+
+## 7. Closing the Website
+
+When you're finished, return to the terminal and press:
+
+```
+Ctrl + C
+```
+
+This stops the local development server.
+
+Whenever you want to continue working, simply run:
+
+```bash
+npm run dev
+```
+
+and visit:
+
+```
+http://localhost:4321
+```
+
+again.
+
+---
+
+# Everyday Tasks
+
+## Add a Character
+
+Create a file inside:
+
+```
+src/content/characters/
+```
+
+Example:
+
+```
+src/content/characters/himeko.md
+```
+
+Add frontmatter:
 
 ```yaml
 ---
 title: Himeko
-description: One-line summary for the index page.
+description: One-line summary.
 faction: Astral Express
 path: Erudition
 world: —
@@ -51,132 +155,305 @@ draft: false
 ---
 ```
 
-3. Write the article body in markdown below the `---`.
+Write the article below the frontmatter.
 
-4. Save — the dev server hot-reloads. The new page appears automatically at `/characters/himeko/`.
+Save the file.
 
-**Hide a draft from players:** set `draft: true` — it won't show in category lists.
+The page automatically appears at:
+
+```
+/characters/himeko/
+```
 
 ---
 
-## Deploy free on GitHub Pages
+## Draft Entries
 
-Everything below is **$0**.
+To hide an entry until it's ready, use:
 
-### Step 1 — Create a GitHub repo
+```yaml
+draft: true
+```
 
-1. Go to [github.com/new](https://github.com/new)
-2. Name it `hsr-data-bank` (or anything — update `base` in `site.config.ts` to match)
-3. Create the repo **without** a README
+Draft entries won't appear in category pages until changed to:
 
-### Step 2 — Push this folder
+```yaml
+draft: false
+```
+
+---
+
+## Edit Site Information
+
+Open:
+
+```
+site.config.ts
+```
+
+Here you can change:
+
+- Website title
+- Tagline
+- URL
+- Base path
+
+---
+
+## Change the Theme
+
+Open:
+
+```
+src/styles/databank.css
+```
+
+All colors, typography, spacing, and styling are located here.
+
+---
+
+# Project Structure
+
+```
+hsr-data-bank/
+├── site.config.ts
+├── package.json
+├── src/
+│   ├── content/
+│   │   ├── characters/
+│   │   ├── factions/
+│   │   ├── locations/
+│   │   └── terminology/
+│   └── styles/
+│       └── databank.css
+└── .github/
+    └── workflows/
+```
+
+---
+
+# Commands
+
+| Command | Description |
+|----------|-------------|
+| `npm run dev` | Starts the local website |
+| `npm run build` | Builds the production version |
+| `npm run preview` | Preview the production build |
+| `npm run import:game` | Import game data as drafts |
+| `npm run import:game:all` | Import all available game data |
+| `npm run import:game:publish` | Publish imported entries |
+
+---
+
+# Importing Game Data
+
+The project can import structured data from:
+
+https://github.com/coralie6626/hsr-databank
+
+## Import One Character
 
 ```bash
-cd hsr-data-bank
+npm run import:game -- --only kafka
+```
+
+## Import All Characters
+
+```bash
+npm run import:game
+```
+
+## Import Everything
+
+```bash
+npm run import:game:all
+```
+
+## Publish Imported Entries
+
+```bash
+npm run import:game:publish
+```
+
+Imported entries include:
+
+- Character information
+- Faction
+- Path
+- Rarity
+- Story overview
+- Empty **At the Table** section
+- `draft: true` by default
+
+Review imported content before changing entries to:
+
+```yaml
+draft: false
+```
+
+See `ATTRIBUTION.md` for information about the original data source.
+
+---
+
+# Deploying the Website
+
+Once you're happy with your changes, you can publish the website online.
+
+## GitHub Pages
+
+### 1. Create a Repository
+
+Create a new GitHub repository.
+
+Example:
+
+```
+hsr-data-bank
+```
+
+Do **not** initialize it with a README.
+
+---
+
+### 2. Push the Project
+
+```bash
 git init
 git add .
-git commit -m "Initial Data Bank site"
+git commit -m "Initial commit"
 git branch -M main
 git remote add origin https://github.com/YOUR-USERNAME/hsr-data-bank.git
 git push -u origin main
 ```
 
-### Step 3 — Enable GitHub Pages
+---
 
-1. Repo → **Settings** → **Pages**
-2. Under **Build and deployment**, set **Source** to **GitHub Actions**
-3. Wait for the workflow to finish (Actions tab)
+### 3. Enable GitHub Pages
 
-Your site will be live at:
+Open your repository.
 
-`https://YOUR-USERNAME.github.io/hsr-data-bank/`
+Go to:
 
-### Step 4 — Update `site.config.ts`
+```
+Settings
+→ Pages
+```
+
+Under **Source**, choose:
+
+```
+GitHub Actions
+```
+
+Wait for the deployment workflow to finish.
+
+Your site will be available at:
+
+```
+https://YOUR-USERNAME.github.io/hsr-data-bank/
+```
+
+---
+
+### 4. Update site.config.ts
 
 ```ts
 export const site = {
-  title: 'Data Bank',
-  tagline: 'Trailblaze Campaign Archive',
-  url: 'https://YOUR-USERNAME.github.io',
-  base: '/hsr-data-bank',
+  title: "Data Bank",
+  tagline: "Trailblaze Campaign Archive",
+  url: "https://YOUR-USERNAME.github.io",
+  base: "/hsr-data-bank",
 };
 ```
 
-Commit and push — GitHub Actions rebuilds automatically.
+Commit and push your changes.
 
-**Share with players:** send the GitHub Pages URL.
-
----
-
-## Deploy free on Cloudflare Pages (alternative)
-
-1. Push the repo to GitHub
-2. [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-3. Build settings: **Astro** preset, command `npm run build`, output `dist`
-4. Set `base: '/'` in `site.config.ts`
+GitHub Actions will automatically rebuild and publish the website.
 
 ---
 
-## Customize the HSR look
+# Cloudflare Pages
 
-All styling: `src/styles/databank.css`
+If you'd rather use Cloudflare Pages:
 
-Site title and tagline: `site.config.ts`
+1. Push the repository to GitHub.
 
----
+2. Open the Cloudflare Dashboard.
 
-## Project structure
+3. Go to:
+
+```
+Workers & Pages
+```
+
+4. Create a new Pages project.
+
+5. Connect your GitHub repository.
+
+6. Choose the Astro preset.
+
+Use:
+
+Build command:
 
 ```text
-hsr-data-bank/
-├── site.config.ts
-├── src/content/            ← your lore (markdown)
-├── src/styles/databank.css ← HSR theme
-└── .github/workflows/      ← free auto-deploy
+npm run build
 ```
 
+Output directory:
+
+```text
+dist
+```
+
+If using Cloudflare Pages, update:
+
+```ts
+base: "/"
+```
+
+inside `site.config.ts`.
+
 ---
 
-## Commands
+# Advanced Information
 
-| Command | What it does |
-| ------- | ------------ |
-| `npm run dev` | Local preview |
-| `npm run build` | Build to `dist/` |
-| `npm run preview` | Preview production build |
-| `npm run import:game` | Import characters from [coralie6626/hsr-databank](https://github.com/coralie6626/hsr-databank) (draft) |
-| `npm run import:game:all` | Import characters + light cones + relics |
-| `npm run import:game:publish` | Import characters visible on the site |
+These sections are mostly useful if you're modifying the project itself.
 
-See `ATTRIBUTION.md` for the upstream data source.
+## Folder Overview
 
----
+- `src/content/` — Markdown lore entries
+- `src/styles/` — Site styling
+- `site.config.ts` — Site configuration
+- `.github/workflows/` — Automatic GitHub deployment
 
-## Game data import (coralie6626/hsr-databank)
+## Build Process
 
-The repo [coralie6626/hsr-databank](https://github.com/coralie6626/hsr-databank) has structured JSON for ~50+ characters, light cones, and relic sets — faction, path, story, skills, etc.
-
-After `npm install`:
+Development:
 
 ```bash
-# Import one character to try (edit kafka.md, set draft: false)
-npm run import:game -- --only kafka
-
-# Import all characters as drafts (hidden until you publish)
-npm run import:game
-
-# Import everything
-npm run import:game:all
-
-# Make imported entries visible on category pages
-npm run import:game:publish
+npm run dev
 ```
 
-Each imported file gets:
+Production:
 
-- Infobox fields from JSON (faction, path, rarity)
-- `## Overview` from game story text
-- Empty `## At the table` for your campaign
-- `draft: true` until you flip it or use `--publish`
+```bash
+npm run build
+```
 
-**For players:** only set `draft: false` on entries you've reviewed. Add table-specific notes under **At the table**.
+Preview production build:
+
+```bash
+npm run preview
+```
+
+---
+
+# Credits
+
+Game data imports are based on:
+
+https://github.com/coralie6626/hsr-databank
+
+See `ATTRIBUTION.md` for licensing and attribution information.
+````
